@@ -2,22 +2,24 @@ from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from .models import Book
 from .forms import SearchForm, UserForm, RegisterForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 # Create your views here.
 
-def index_books(request, currentUser=None):
+def index_books(request):
     books = Book.objects.all()
     form = SearchForm()
     user = UserForm()
     register = RegisterForm()
+    currentUser = request.user
     return render(request, 'book/index.html', {'books':books, 'form':form, 'userLogin':user, 'register':register, 'currentUser':currentUser})
 
 def search_books(request, category, name):
     books = Book.objects.filter(**{category:name})
     form = SearchForm()
-    return render(request, 'book/book_search.html', {'books':books, 'form':form})
+    currentUser = request.user
+    return render(request, 'book/book_search.html', {'books':books, 'form':form, 'currentUser':currentUser})
 
 def search_test(request):
     #POST we need to process data now
@@ -58,10 +60,10 @@ def login_user(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
-            if user:
-                login(user)
-                print("Authentication successful!")
-            return redirect('index_books', user)
+            if user is not None:
+                login(request, user)
+                print("Login Successfull!")
+            return redirect('index_books')
 
         else:
             print("Invalid form")
@@ -69,3 +71,8 @@ def login_user(request):
 
     else:
         return redirect('index_books')
+
+def logout_user(request):
+    #currentUser = request.user
+    logout(request)
+    return redirect('index_books')
