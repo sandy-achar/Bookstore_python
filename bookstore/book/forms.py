@@ -14,7 +14,12 @@ class SearchForm(forms.Form):
     category = forms.ChoiceField(choices=searchChoices)
     name = forms.CharField(label='search', max_length=40)
 
-class UserForm(forms.ModelForm):
+class UserForm(forms.Form):
+    username = forms.CharField(max_length=30)
+    password = forms.CharField(widget=forms.PasswordInput)
+
+class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ['username', 'password', 'email', 'first_name', 'last_name']
+

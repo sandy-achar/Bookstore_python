@@ -65,15 +65,32 @@
     <div class="row">
         <div class="col-md-3">
             {% block search %}
+        
+        {% if currentUser.is_authenticated %}
+        <h3>Welcome, {{currentUser.first_name}} {{currentUser.last_name}}</h3>
+        <h1>Search</h1>
         <form method="POST" action="{% url 'search_test' %}"> {% csrf_token %}
             {{ form.as_p  }}
             <button type="submit">go</button>
         </form>
 
-        <form method="POST" action="#"> {% csrf_token %}
-            {{ user.as_p  }}
+        {% else %}
+        
+        <h1>Login</h1>
+        <form method="POST" action="{% url 'login' %}"> {% csrf_token %}
+            {{ userLogin }}
             <button type="submit">login</button>
         </form>
+        
+        <!--
+        <h1>Register</h1>
+        <form method="POST" action="{% url 'register_user' %}"> {%csrf_token %}
+            {{ register }}
+            <button type="submit">Register</button>
+        </form>
+        -->
+        {% endif %}
+
         {% endblock %}
         </div>
         
