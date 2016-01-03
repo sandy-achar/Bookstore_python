@@ -46,14 +46,12 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#">Services</a>
-                    </li>
                     {% if currentUser.is_authenticated %}
                     <li>
                         <a href="{% url 'logout_user' %}">Logout</a>
-                    <li>
+                    </li>
                     {% endif %}
+                    <li>
                         <a href="#">Contact</a>
                     </li>
                 </ul>
@@ -73,9 +71,10 @@
         {% if currentUser.is_authenticated %}
         <h3>Welcome, {{currentUser.first_name}} {{currentUser.last_name}}</h3>
         <h1>Search</h1>
+
         <form method="POST" action="{% url 'search_test' %}"> {% csrf_token %}
             {{ form.as_p  }}
-            <button type="submit">go</button>
+            <input type="submit" value="Go" />
         </form>
 
         {% else %}
